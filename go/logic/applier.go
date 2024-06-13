@@ -8,6 +8,7 @@ package logic
 import (
 	gosql "database/sql"
 	"fmt"
+	"strings"
 	"sync/atomic"
 	"time"
 
@@ -727,6 +728,7 @@ func (this *Applier) ExpectProcess(sessionId int64, stateHint, infoHint string) 
 				and state like concat('%', ?, '%')
 				and info  like concat('%', ?, '%')
 	`
+	log.Infof(strings.ReplaceAll(query, "%", "%%"), sessionId, stateHint, infoHint)
 	err := sqlutils.QueryRowsMap(this.db, query, func(m sqlutils.RowMap) error {
 		found = true
 		return nil
